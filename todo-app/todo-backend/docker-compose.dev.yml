@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    ports:
+      - 3009:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=todo_backend_db
