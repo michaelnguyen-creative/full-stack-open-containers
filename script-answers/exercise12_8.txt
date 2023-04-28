@@ -1,0 +1,100 @@
+Script started on Fri Apr 28 16:36:38 2023
+[1m[7m%[27m[1m[0m                                                                       
+ 
+
+[0m[27m[24m[Jmichaelng@mich-sci full-stack-open-containers % [K[?2004hddocker ps[?2004l
+
+CONTAINER ID   IMAGE     COMMAND                  CREATED          STATUS          PORTS                     NAMES
+5f925bfe3855   nginx     "/docker-entrypoint.…"   30 minutes ago   Up 30 minutes   0.0.0.0:8080->80/tcp      bold_stonebraker
+5f0109ad54a5   mongo     "docker-entrypoint.s…"   19 hours ago     Up 19 hours     0.0.0.0:3009->27017/tcp   todo-backend-mongodb-1
+[1m[7m%[27m[1m[0m                                                                       
+ 
+
+[0m[27m[24m[Jmichaelng@mich-sci full-stack-open-containers % [K[?2004hddokcer     cker exect  -it [7mtodo-bac[7mk[7mend-mongodb-1[27m[K[A[50C[27mt[27mo[27md[27mo[27m-[27mb[27ma[27mck[27me[27mn[27md[27m-[27mm[27mo[27mn[27mg[27mo[27md[27mb[27m-[27m1[1Cbash[?2004l
+
+[?2004hroot@5f0109ad54a5:/# mongosh -u root -p secret
+[?2004l
+]0;mongosh mongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000Current Mongosh Log ID:	644b93cd68caee978edc26e4
+Connecting to:		[1m[32mmongodb://<credentials>@127.0.0.1:27017/?directConnection=true&serverSelectionTimeoutMS=2000&appName=mongosh+1.8.0[0m
+Using MongoDB:		6.0.5
+[1m[33mUsing Mongosh[0m:		1.8.0
+
+For mongosh info see: [1mhttps://docs.mongodb.com/mongodb-shell/[0m
+
+[1G[0J [1G[1m[33m------[0m
+   [1m[33mThe server generated these startup warnings when booting[0m
+   2023-04-27T14:42:22.163+00:00: Using the XFS filesystem is strongly recommended with the WiredTiger storage engine. See http://dochub.mongodb.org/core/prodnotes-filesystem
+   2023-04-27T14:42:23.539+00:00: vm.max_map_count is too low
+[1m[33m------[0m
+
+[1m[33m------[0m
+   Enable MongoDB's free cloud-based monitoring service, which will then receive and display
+   metrics about your deployment (disk utilization, CPU, operation statistics, etc).
+   
+   The monitoring data will be available on a MongoDB website with a unique URL accessible to you
+   and anyone you share the URL with. MongoDB may use this information to make product
+   improvements and to suggest MongoDB products and deployment options to you.
+   
+   To enable free monitoring, run the following command: db.enableFreeMonitoring()
+   To permanently disable this reminder, run the following command: db.disableFreeMonitoring()
+[1m[33m------[0m
+
+[1G[0Jtest> [7Gshow dbs
+
+[1madmin[0m            100.00 KiB
+[1mconfig[0m            60.00 KiB
+[1mlocal[0m             72.00 KiB
+[1mtodo_backend_db[0m   56.00 KiB
+[1G[0Jtest> [7Guse todo_backend-db[1G[0Jtest> use todo_backend-d[25G[1G[0Jtest> use todo_backend-[24G[1G[0Jtest> use todo_backend[23G_db
+
+switched to db todo_backend_db
+[1G[0Jtodo_backend_db> [18Gshow collections
+
+[1mtodos[0m
+[1G[0Jtodo_backend_db> [18Gdb.todos.find({}[1G[0Jtodo_backend_db> db.todos.find({[33G[1G[0Jtodo_backend_db> db.todos.find([32G)
+
+[
+  {
+    _id: ObjectId("644a89cc559de5f288043a6c"),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId("644a89cd559de5f288043a6d"),
+    text: [32m'new text'[39m,
+    done: [33mtrue[39m
+  }
+]
+[1G[0Jtodo_backend_db> [18Gdb.todos.insertOne(
+
+[1G[0J... [5G{ text[33mtext[39m: Increase the number o[36mof[39m tools[1G[0J... { [33mtext[39m: Increase the number [36mof[39m tool[40Gs[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1D[1C[1G[0J... { [33mtext[39m: [32m"Increase the number of tools[39m[14G[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C[1C [32mi[39m[32mn[39m [32mm[39m[32my[39m [32mt[39m[32mo[39m[32mo[39m[32ml[39m[32mb[39m[32me[39m[32ml[39m[32mt[39m[32m"[39m, d[36mdo[39mdone[33mdone[39m: fals[33mfalse[39m [1G[0J... { [33mtext[39m: [32m"Increase the number of tools in my toolbelt"[39m, [33mdone[39m: [33mfalse[39m } [1G)
+
+{
+  acknowledged: [33mtrue[39m,
+  insertedId: ObjectId("644b944bce8f66b20f3321f7")
+}
+[1G[0Jtodo_backend_db> [18Gdb.todos.fndi[1G[0Jtodo_backend_db> db.todos.fnd[30G[1G[0Jtodo_backend_db> db.todos.fn[29G[1G[0Jtodo_backend_db> db.todos.f[28Gind()
+
+[
+  {
+    _id: ObjectId("644a89cc559de5f288043a6c"),
+    text: [32m'Write code'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId("644a89cd559de5f288043a6d"),
+    text: [32m'new text'[39m,
+    done: [33mtrue[39m
+  },
+  {
+    _id: ObjectId("644b944bce8f66b20f3321f7"),
+    text: [32m'Increase the number of tools in my toolbelt'[39m,
+    done: [33mfalse[39m
+  }
+]
+[1G[0Jtodo_backend_db> [18G
+
+[?2004hroot@5f0109ad54a5:/# [?2004l
+
+exit
+[1m[7m%[27m[1m[0m                                                                       
