@@ -17,6 +17,9 @@ router.post('/', async (req, res) => {
   res.send(todo);
 });
 
+// These are just route defs (meaning findByIdMiddleware doesn't work here)
+// Execution happens when you actually use the route
+// Syntax for using the routes: `app.use('/route', router)`
 const singleRouter = express.Router();
 
 const findByIdMiddleware = async (req, res, next) => {
@@ -35,7 +38,7 @@ singleRouter.delete('/', async (req, res) => {
 
 /* GET todo. */
 singleRouter.get('/', async (req, res) => {
-  res.sendStatus(405); // Implement this
+  res.status(200).json(req.todo); // Implement this
 });
 
 /* PUT todo. */
@@ -44,6 +47,5 @@ singleRouter.put('/', async (req, res) => {
 });
 
 router.use('/:id', findByIdMiddleware, singleRouter)
-
 
 module.exports = router;
