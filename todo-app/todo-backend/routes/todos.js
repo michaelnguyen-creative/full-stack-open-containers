@@ -9,18 +9,21 @@ router.get('/', async (_, res) => {
   res.send(todos)
 })
 
+// Init data once
+// But you should also synchronize data frequently
 const initRedisData = async () => {
   const todoCount = await Todo.estimatedDocumentCount()
   console.log('todoCount', todoCount)
   await redis.setAsync('added_todos', todoCount)
 }
 
+
+
 const todoCounter = async () => {
   try {
-    await initRedisData()
     const added_todos = await redis.getAsync('added_todos')
     const incrementTodo = async () => {
-      redis.setAsync('added_todos', added_todos + 1)
+      redis.setAsync('added_todos', Number(added_todos) + 1)
     }
     return { added_todos, incrementTodo }
   } catch (error) {
@@ -72,5 +75,6 @@ singleRouter.put('/', async (req, res) => {
 })
 
 router.use('/:id', findByIdMiddleware, singleRouter)
+initRedisData()
 
 module.exports = { todosRouter: router, todoCounter }
