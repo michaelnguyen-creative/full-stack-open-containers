@@ -9,9 +9,23 @@ router.get('/', async (_, res) => {
   res.send(todos)
 })
 
+const initRedisData = async () => {
+  const todoCount = await Todo.estimatedDocumentCount()
+  console.log('todoCount', todoCount)
+  await redis.setAsync('added_todos', todoCount)
+}
+
 const todoCounter = async () => {
-  const { added_todos } = await redis.getAsync('added_todos')
-  await redis.setAsync('added_todos', added_todos + 1)
+  try {
+    await initRedisData()
+    const added_todos = await redis.getAsync('added_todos')
+    const incrementTodo = async () => {
+      redis.setAsync('added_todos', added_todos + 1)
+    }
+    return { added_todos, incrementTodo }
+  } catch (error) {
+    console.log('Unhandled exception occured', error)
+  }
 }
 /* POST todo to listing. */
 router.post('/', async (req, res) => {
@@ -19,7 +33,8 @@ router.post('/', async (req, res) => {
     text: req.body.text,
     done: false,
   })
-  await todoCounter()
+  const { incrementTodo } = await todoCounter()
+  await incrementTodo()
   res.send(todo)
 })
 
@@ -58,4 +73,4 @@ singleRouter.put('/', async (req, res) => {
 
 router.use('/:id', findByIdMiddleware, singleRouter)
 
-module.exports = router
+module.exports = { todosRouter: router, todoCounter }

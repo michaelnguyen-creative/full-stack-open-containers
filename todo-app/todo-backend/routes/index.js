@@ -1,7 +1,6 @@
-const express = require('express');
-const router = express.Router();
-const redis = require('../redis')
-const mongodb = require('../mongo')
+const express = require('express')
+const router = express.Router()
+const { todoCounter } = require('./todos')
 
 const configs = require('../util/config')
 
@@ -12,18 +11,13 @@ router.get('/', async (req, res) => {
   visits++
   res.send({
     ...configs,
-    visits
-  });
-});
-
-router.get('/statistics', async (_req, res) => {
-  const currentValue = await redis.getAsync('added_todos')
-  // Initialize redis data
-  if (!currentValue) {
-    const todoCount = await mongodb.Todo.estimatedDocumentCount()
-    await redis.setAsync('added_todos', todoCount)
-  }
-  res.status(200).json({ "added_todos": currentValue })
+    visits,
+  })
 })
 
-module.exports = router;
+router.get('/statistics', async (_req, res) => {
+  const { added_todos } = await todoCounter()
+  res.status(200).json({ added_todos })
+})
+
+module.exports = router
