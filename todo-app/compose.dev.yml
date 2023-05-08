@@ -1,18 +1,54 @@
 version: '3.8'
 
 services:
-  todo-frontend:
+  mongodb:
     extends:
-      file: ./todo-frontend/compose.dev.yml
-      service: todo-frontend-dev
-  nginx-proxy:
+      file: ./todo-backend/compose.dev.yml
+      service: mongodb
+    volumes:
+      - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - ./todo-backend/mongo_data:/data/db
+  redisdb:
+    extends:
+      file: ./todo-backend/compose.dev.yml
+      service: redisdb
+    volumes:
+      - ./todo-backend/redis_data:/data
+  express-server:
+    image: fso12/todo-backend-dev
+    build:
+      context: ./todo-backend
+      dockerfile: dev.Dockerfile
+    volumes:
+      - ./todo-backend:/usr/src/app
+    container_name: fso12_todo_backend_dev
+    env_file: ./todo-backend/.env
+    depends_on:
+      - mongodb
+      - redisdb
+  
+  react-app:
+    image: fso12/todo-frontend-dev
+    build:
+      context: ./todo-frontend
+      dockerfile: dev.Dockerfile
+    container_name: fso12_todo_frontend_dev
+    volumes:
+      - ./todo-frontend:/usr/src/app
+    environment:
+      - REACT_APP_BACKEND_URL=http://localhost:8080/api
+  
+  proxy-server:
     image: nginx:1.23.4-alpine
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx.dev.conf:/etc/nginx/nginx.conf:ro
     ports:
-      - 8080:80
-    container_name: fso_nginx
+      - "8080:80"
+    container_name: fso12_todo_proxy_dev
     depends_on:
-      todo-frontend:
+      react-app:
         condition: service_completed_successfully
-        restart: true
+  
+  debugger:
+    image: busybox
+    container_name: busybox_debugger
