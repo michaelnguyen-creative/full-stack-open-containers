@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  todo-frontend:
+  todo-frontend-dev:
     image: fso12/todo-frontend-dev
     build:
       context: .

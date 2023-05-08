@@ -4,13 +4,15 @@ services:
   todo-frontend:
     extends:
       file: ./todo-frontend/compose.dev.yml
-      service: todo-frontend
+      service: todo-frontend-dev
   nginx-proxy:
     image: nginx:1.23.4-alpine
     volumes:
-      - ./nginx.dev.config:/etc/nginx/nginx.dev.conf:ro
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
     ports:
       - 8080:80
     container_name: fso_nginx
     depends_on:
-      - todo-frontend
+      todo-frontend:
+        condition: service_completed_successfully
+        restart: true
