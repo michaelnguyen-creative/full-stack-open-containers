@@ -46,8 +46,8 @@ services:
       - "8080:80"
     container_name: fso12_todo_proxy_dev
     depends_on:
-      react-app:
-        condition: service_completed_successfully
+      - react-app
+      - express-server
   
   debugger:
     image: busybox
