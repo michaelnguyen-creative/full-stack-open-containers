@@ -1,1 +1,9 @@
 .env
+
+.gitignore
+.DS_Store
+
+compose.dev.yml
+dev.Dockerfile
+docker-compose.yml
+Dockerfile

@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo
+    volumes:
+      - ./todo-backend/mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js
+      - ./todo-backend/mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+      - MONGO_INITDB_DATABASE=todo_backend_db
+
+  redisdb:
+    image: redis
+    volumes:
+      - ./todo-backend/redis_data:/data
+    command: ['redis-server', '--appendonly', 'yes']
+
+  express-server:
+    image: fso12/todo-express-server
+    build:
+      context: ./todo-backend
+      dockerfile: Dockerfile
+    container_name: fso12_todo_server
+    environment:
+      - NODE_ENV=production
+      - MONGO_URL=mongodb://the_username:the_password@mongodb:27017/todo_backend_db
+      - REDIS_URL=redis://redisdb:6379
+    depends_on:
+      - mongodb
+      - redisdb
+  
+  react-app:
+    image: fso12/todo-frontend
+    build:
+      context: ./todo-frontend
+      dockerfile: Dockerfile
+    container_name: fso12_todo_frontend
+  
+  proxy-server:
+    image: nginx:1.23.4-alpine
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+    ports:
+      - "8080:80"
+    container_name: fso12_todo_proxy
+    depends_on:
+      - react-app
+      - express-server
+  
+  debugger:
+    image: busybox
+    container_name: busybox_debugger

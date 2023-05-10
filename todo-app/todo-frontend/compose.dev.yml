@@ -1,12 +1,12 @@
 version: '3.8'
 
 services:
-  todo-frontend-dev:
+  todo-react-app-dev:
     image: fso12/todo-frontend-dev
     build:
       context: .
       dockerfile: dev.Dockerfile
-    container_name: fso_todo_frontend_dev
+    container_name: fso_todo_react_app_dev
     volumes:
       - ./:/usr/src/app
     ports:

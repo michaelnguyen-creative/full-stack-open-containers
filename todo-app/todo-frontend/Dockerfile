@@ -1,7 +1,7 @@
 FROM node:19-alpine AS base
 WORKDIR /app
 COPY ["package*.json", "package*.json", "./"]
-ENV REACT_APP_BACKEND_URL=http://localhost:3003
+ENV REACT_APP_BACKEND_URL=http://localhost:8080/api
 # COPY --chown=node:node . .
 # USER node
 
